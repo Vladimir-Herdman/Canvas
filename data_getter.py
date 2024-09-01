@@ -4,16 +4,18 @@ from tkinter import ttk
 
 from canvasapi import Canvas
 
+from show_data import ShowData
+
 
 class SignIn:
-    def __init__(self, root):
-        self.root = root
+    def __init__(self, old_root):
+        self.root = old_root
         self.root.title("Canvas Token Sign In")
 
-        self.sign_in_frame = ttk.Frame(root, padding='12 12 12 12')
+        self.sign_in_frame = ttk.Frame(self.root, padding='12 12 12 12')
         self.sign_in_frame.grid(column=0, row=0, sticky=(N, W, E, S))
-        root.columnconfigure(0, weight=1)
-        root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
 
         # variables
         self.canvas_domain = StringVar()
@@ -44,11 +46,15 @@ class SignIn:
         self.token_help.grid(column=2, row=3, sticky=W, padx=3)
 
         # sign in button
-        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', command=self.sign_in_func, bg='lightblue')
-        self.sign_in_button.grid(column=0, row=3, columnspan=2, sticky=(W, E))
+        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', width=16, style="Blue.TButton", command=self.sign_in_func)
+        self.sign_in_button.grid(column=1, row=5, sticky=E, padx=12)
 
     def sign_in_func(self):
-        pass
+        try:
+            self.sign_in_frame.destroy()
+            ShowData(self.root, course_dict, grade_dict)
+        except Exception as e:
+            pass
 
     def domain_help_func(self):
         messagebox.showinfo(title="Domain Help", icon="info", message=
@@ -73,7 +79,19 @@ class SignIn:
     def token_help_func(self):
         messagebox.showinfo(title="Token Help", icon="info", message=
             """
-                Hello, is this message box
-                working
+                Canvas API Token steps:
+
+                1. Open Canvas
+                2. Click on Account
+                3. Click on Settings
+                4. Scroll to "Approved Integrations" 
+                5. Click "+ New Access Token"
+                6. Profit!
+
+                When you create the token, 
+                you can set an expiration, 
+                remember to write down / save 
+                the token as you can't see it 
+                after the creation screen
             """
         )
