@@ -1,0 +1,5 @@
+# pycache created files
+__pycache__/
+
+# tester files
+tester.py
