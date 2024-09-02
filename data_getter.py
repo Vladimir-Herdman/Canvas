@@ -46,11 +46,22 @@ class SignIn:
         self.token_help.grid(column=2, row=3, sticky=W, padx=3)
 
         # sign in button
-        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', width=16, command=self.sign_in_func)
+        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', width=10, command=self.sign_in_func)
         self.sign_in_button.grid(column=1, row=5, sticky=E, padx=12)
+
+        # load saved data button
+        load_button = ttk.Button(self.sign_in_frame, text='Load Saved Info', width=14, command=self.load_func)
+        load_button.grid(column=1, row=5, sticky=W, padx=12)
 
         self.root.after(100, self.domain_entry.focus)
         self.root.bind('<Return>', self.sign_in_func)
+
+    def load_func(self, *args):
+        with open('saved_personal', 'r') as saved_data:
+            data_list = saved_data.read().split(",")
+            self.canvas_domain.set(data_list[0])
+            self.canvas_token.set(data_list[1])
+        self.sign_in_func()
 
     def sign_in_func(self, *args):
         try:

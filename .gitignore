@@ -3,3 +3,7 @@ __pycache__/
 
 # tester files
 tester.py
+saved_personal
+
+# images
+.DS_Store
