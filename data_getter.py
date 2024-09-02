@@ -46,15 +46,53 @@ class SignIn:
         self.token_help.grid(column=2, row=3, sticky=W, padx=3)
 
         # sign in button
-        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', width=16, style="Blue.TButton", command=self.sign_in_func)
+        self.sign_in_button = ttk.Button(self.sign_in_frame, text='Sign In', width=16, command=self.sign_in_func)
         self.sign_in_button.grid(column=1, row=5, sticky=E, padx=12)
 
-    def sign_in_func(self):
+        self.root.after(100, self.domain_entry.focus)
+        self.root.bind('<Return>', self.sign_in_func)
+
+    def sign_in_func(self, *args):
         try:
+            # clean if needed
+            if self.canvas_domain.get()[0] == "<" or self.canvas_domain.get()[-1] == ">":
+                self.canvas_domain.set(self.canvas_domain.get()[1:-1])
+            if self.canvas_domain.get()[-4:] == ".com":
+                self.canvas_domain.set(self.canvas_domain.get()[0:-4])
+
+            # get canvas information
+            canvas = Canvas(f"https://{self.canvas_domain.get()}.com", self.canvas_token.get())
+
+            current_user = canvas.get_current_user()
+            courses = current_user.get_courses()
+
+            enrollments = list()
+
+            course_dict = dict()  # for having the name of the course be referencable by id, as canvasapi uses id's more than course names []
+            grades_dict = dict()
+
+            for course in courses:
+                id = course.id
+                name = course.name
+
+                enrollments.append(course.get_enrollments(user_id=current_user.id))
+                course_dict[id] = [name]
+
+                # if course code exists, append it to the classes dictionary list
+                if course.course_code:
+                    course_dict[id].append(course.course_code)
+
+            for enrollment in enrollments:
+                grades_dict[enrollment[0].course_id] = enrollment[0].grades['current_score']
+            
             self.sign_in_frame.destroy()
-            ShowData(self.root, course_dict, grade_dict)
+            ShowData(self.root, course_dict, grades_dict)
         except Exception as e:
-            pass
+            try:
+                print(f"Error in ShowData class:  {e}")
+                ttk.Label(self.sign_in_frame, text='Error in canvas domain or token', foreground='red').grid(column=0, row=5, sticky=E)
+            except Exception as e:
+                print(f"Error in putting label to sign_in_func:  {e}")
 
     def domain_help_func(self):
         messagebox.showinfo(title="Domain Help", icon="info", message=
