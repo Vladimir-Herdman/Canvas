@@ -4,6 +4,9 @@ from tkinter import ttk
 
 from canvasapi import Canvas
 
+from datetime import date
+from pandas import to_datetime
+
 from show_data import ShowData
 
 
@@ -75,7 +78,21 @@ class SignIn:
             canvas = Canvas(f"https://{self.canvas_domain.get()}.com", self.canvas_token.get())
 
             current_user = canvas.get_current_user()
-            courses = current_user.get_courses()
+            all_courses_ever = current_user.get_courses()
+            courses = list()
+
+            today = date.today()
+            if today.month > 8:
+                for course in all_courses_ever:
+                    course_date = to_datetime(course.start_at)
+                    if course_date and course_date.month >= 8 and course_date.year == today.year:  # short circuit
+                        courses.append(course)
+            else:
+                for course in all_courses_ever:
+                    course_date = to_datetime(course.start_at)
+                    if course_date and course_date.year == today.year:
+                        courses.append(course)
+
 
             enrollments = list()
 

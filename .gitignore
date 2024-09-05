@@ -4,6 +4,7 @@ __pycache__/
 # tester files
 tester.py
 saved_personal
+personal_executable.py
 
 # images
 .DS_Store

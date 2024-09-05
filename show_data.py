@@ -54,7 +54,7 @@ class ShowData:
         # main loop for adding grades/classes to table
         for i, course_id in enumerate(self.course_dict.keys()):
             
-            if i+1 < 13:
+            if i < 12:
                 color = self.colors[i+1]
             else:
                 color = self.colors["extra"]
