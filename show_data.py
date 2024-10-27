@@ -43,6 +43,9 @@ class ShowData:
 
         self.place_classes_and_grades()
 
+        # bring window to front of screen once called, but not permanent
+        self.root.focus_force()
+
     def place_classes_and_grades(self):
         # header flags for which header to make for table
         full_header = False
